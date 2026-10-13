@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Leonlink: free, open-source link-in-bio page maker with 15 themes. No fees, no ads, your own domain."><meta property="og:title" content="Leonlink"><meta name="theme-color" content="#0b0f14"><title>Leonlink — Business Link Page</title>
+<style>
+:root{--bg:#0b0f14;--bg2:#1a2230;--card:rgba(255,255,255,.06);--text:#eef;--muted:#99a;--accent:#7cf;--accent2:#c7f;--btn:rgba(255,255,255,.08);--btnText:#eef;--border:rgba(255,255,255,.18);--radius:14px;--font:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;--head:system-ui,sans-serif;--shadow:0 10px 40px rgba(0,0,0,.4)}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:var(--font);color:var(--text);background:radial-gradient(circle at 30% 10%,var(--bg2),var(--bg) 70%) fixed;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:var(--pattern,none)}
+.wrap{position:relative;max-width:480px;margin:0 auto;padding:48px 18px 120px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:calc(var(--radius) + 8px);padding:30px 22px;box-shadow:var(--shadow);backdrop-filter:blur(12px);text-align:center}
+.crest{width:96px;height:96px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;font-size:42px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);box-shadow:0 0 30px var(--accent);overflow:hidden;animation:glow 1.2s ease-out}
+@keyframes glow{from{filter:brightness(0);transform:scale(.8)}to{filter:none;transform:none}}
+.crest img{width:100%;height:100%;object-fit:cover}
+h1{font-family:var(--head);margin:6px 0 4px;font-size:1.7rem}
+.title{color:var(--accent);font-weight:600;margin:0 0 8px}.bio{color:var(--muted);margin:0 0 22px;line-height:1.5}
+.links{display:flex;flex-direction:column;gap:12px}
+.link{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:var(--radius);background:var(--btn);color:var(--btnText);border:1px solid var(--border);text-decoration:none;font-weight:600;transition:transform .2s,box-shadow .2s;opacity:0;animation:in .5s forwards}
+.link:hover{transform:translateY(-2px);box-shadow:0 0 22px var(--accent);border-color:var(--accent)}
+.link .ic{width:26px;text-align:center;font-size:1.2rem}.link .t{flex:1;text-align:left}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.foot{margin-top:22px;color:var(--muted);font-size:.8rem}
+.bar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);display:flex;gap:6px;background:rgba(15,15,20,.9);padding:7px;border-radius:40px;z-index:20;border:1px solid rgba(255,255,255,.15)}
+.bar button{font:600 .85rem system-ui;border:0;border-radius:30px;padding:10px 13px;background:#2a2f3a;color:#fff;cursor:pointer}
+.panel{position:fixed;left:0;right:0;bottom:0;max-height:78vh;overflow:auto;background:#12151c;color:#eee;border-radius:20px 20px 0 0;padding:20px 18px 90px;z-index:15;transform:translateY(105%);transition:transform .35s;font-family:system-ui}
+.panel.open{transform:none}.panel h2{margin:0 0 12px;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.sw{border-radius:12px;padding:10px;cursor:pointer;min-height:86px;display:flex;flex-direction:column;justify-content:space-between}
+.sw.active{outline:3px solid #fff}.sw b{font-size:.9rem}.sw small{opacity:.8;font-size:.72rem}
+.dots{display:flex;gap:4px}.dots i{width:14px;height:14px;border-radius:50%;display:block}
+label{display:block;font-size:.8rem;color:#aab;margin:10px 0 4px}
+input,textarea{width:100%;padding:9px 10px;border-radius:8px;border:1px solid #333a48;background:#1b2029;color:#fff;font:inherit}
+.row{display:grid;grid-template-columns:52px 1fr 1.4fr 34px 34px 34px;gap:6px;margin-bottom:6px}
+.row button,.add{background:#2a2f3a;color:#fff;border:0;border-radius:8px;height:38px;cursor:pointer}
+.add{padding:0 14px;margin-top:6px}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:10px;opacity:0;transition:.3s;z-index:30;font-family:system-ui;pointer-events:none}.toast.show{opacity:1}
+body.view .bar,body.view .panel{display:none}
+@media(max-width:520px){.row{grid-template-columns:48px 1fr 34px 34px 34px}.row .u{grid-column:1/-1;grid-row:2}}
+
+/* v2 polish */
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.link{position:relative;overflow:hidden}
+.link .rip{position:absolute;border-radius:50%;background:var(--accent);opacity:.35;transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+.link .cnt{font-size:.7rem;opacity:.55;font-weight:500}
+.card{animation:rise .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:none}}
+body{transition:background .5s,color .4s}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.link{opacity:1}}
+</style></head><body>
+<div class="wrap"><div class="card"><div class="crest" id="crest"></div><h1 id="name"></h1><p class="title" id="title"></p><p class="bio" id="bio"></p><div class="links" id="links"></div><div class="foot" id="foot"></div></div></div>
+<div class="panel" id="themes"><h2>Choose a theme (15)</h2><div class="grid" id="grid"></div></div>
+<div class="panel" id="edit"><h2>Edit your page</h2>
+<div class="two"><div><label>Name</label><input id="fName"></div><div><label>Title</label><input id="fTitle"></div></div>
+<label>Bio</label><textarea id="fBio" rows="2"></textarea>
+<div class="two"><div><label>Crest (emoji/initials)</label><input id="fCrest"></div><div><label>Logo image URL (optional)</label><input id="fLogo"></div></div>
+<div class="two"><div><label>Phone (Save Contact)</label><input id="fPhone"></div><div><label>Email (Save Contact)</label><input id="fEmail"></div></div>
+<label>Links: icon · label · URL</label><div id="rows"></div><button class="add" id="addRow">+ Add link</button>
+<p style="font-size:.8rem;color:#889">Use URL <b>vcard</b> for a Save Contact button. Changes save automatically in this browser.</p></div>
+<div class="bar"><button data-p="themes">🎨 Themes</button><button data-p="edit">✏️ Edit</button><button id="share">🔗 Share</button><button id="export">⬇️ Export</button></div>
+<div class="toast" id="toast"></div>
+<script>
+const K=["bg","bg2","card","text","muted","accent","accent2","btn","btnText","border","radius","font","head","pattern"];
+const SANS="system-ui,-apple-system,Segoe UI,Roboto,sans-serif",SERIF="Georgia,'Times New Roman',serif",MONO="'Courier New',monospace";
+const T={
+norse:["Norse","Yggdrasil & Bifrost","ᛟ","#05070d","#1b2a4a","rgba(180,210,255,.07)","#e9f1ff","#93a3c0","#6fe3ff","#c79bff","rgba(255,255,255,.06)","#e9f1ff","rgba(160,200,255,.25)","12px",SANS,"'Cinzel',"+SERIF,"repeating-linear-gradient(60deg,transparent 0 40px,rgba(111,227,255,.05) 40px 41px)"],
+military:["Military","Tactical stealth","★","#141710","#2f3622","rgba(60,70,40,.55)","#e4e6d4","#a3a88a","#c5d64a","#6b7a35","#2a3020","#e4e6d4","#58623d","3px",MONO,"Impact,'Arial Narrow',sans-serif","repeating-linear-gradient(45deg,rgba(0,0,0,.18) 0 12px,transparent 12px 24px)"],
+manager:["Manager","Clean corporate","💼","#e9edf3","#ffffff","#ffffff","#1d2433","#5d6677","#1f5eff","#0a2a6b","#f3f6fb","#1d2433","#d8dee8","10px",SANS,SERIF,"none"],
+executive:["Executive Gold","Black & gold luxury","♛","#0a0a0a","#1e1a12","rgba(20,18,12,.85)","#f3e9cf","#b4a77f","#d4af37","#8a6d1d","transparent","#f3e9cf","#d4af37","0px",SERIF,"'Didot','Bodoni MT',"+SERIF,"none"],
+cyber:["Cyberpunk","Neon night city","⚡","#0d0221","#2a0845","rgba(20,0,40,.6)","#f8f8ff","#b6a6d6","#ff2a6d","#05d9e8","rgba(5,217,232,.08)","#05d9e8","#ff2a6d","0px",MONO,MONO,"repeating-linear-gradient(0deg,rgba(255,42,109,.07) 0 1px,transparent 1px 4px)"],
+tech:["Tech Startup","SaaS gradient","🚀","#0f1023","#3b2a8f","rgba(255,255,255,.08)","#ffffff","#c3c3e6","#8b7bff","#22d3ee","rgba(139,123,255,.22)","#ffffff","rgba(255,255,255,.2)","999px",SANS,SANS,"none"],
+minimal:["Minimal","Black on white","○","#ffffff","#f4f4f4","#ffffff","#111111","#666666","#111111","#555555","#ffffff","#111111","#111111","6px",SANS,SANS,"none"],
+nature:["Nature","Forest & earth","🌿","#1d2b1f","#3e5a3a","rgba(240,235,215,.08)","#f1eedf","#bdb89c","#9bcf6b","#d9a65a","rgba(155,207,107,.12)","#f1eedf","rgba(241,238,223,.2)","18px",SANS,SERIF,"none"],
+ocean:["Ocean","Deep blue calm","🌊","#03213a","#0a6c8f","rgba(255,255,255,.08)","#e8f8ff","#a5cfe0","#4fd1e8","#2b8bff","rgba(79,209,232,.12)","#e8f8ff","rgba(160,230,255,.25)","16px",SANS,SANS,"none"],
+retro:["Retro 80s","Synthwave sunset","🌅","#1a0633","#ff6b35","rgba(26,6,51,.75)","#fff3e6","#ffc6a0","#ffd23f","#ff3cac","rgba(255,60,172,.15)","#ffd23f","#ff3cac","8px",MONO,"Impact,sans-serif","linear-gradient(transparent 70%,rgba(255,60,172,.12))"],
+medical:["Medical","Clinic & health","⚕","#eaf7f7","#ffffff","#ffffff","#12343b","#557178","#0fa3a3","#2d7dd2","#f0fafa","#12343b","#c9e7e7","12px",SANS,SANS,"none"],
+legal:["Legal","Law firm classic","⚖","#1c1f26","#3a2f2a","rgba(250,245,235,.95)","#2a2420","#6b5f55","#7a1f2b","#b08d57","#ffffff","#2a2420","#cfc3b0","4px",SERIF,SERIF,"none"],
+realestate:["Real Estate","Warm & trusted","🏡","#f6f1ea","#ffffff","#ffffff","#2b2b2b","#6f6a63","#c0632d","#2f5d50","#faf6f0","#2b2b2b","#e6dccf","12px",SANS,SERIF,"none"],
+creative:["Creative Studio","Bold & playful","✦","#ffe14d","#ff7ab6","#ffffff","#141414","#4a4a4a","#5b3cff","#ff3d3d","#141414","#ffffff","#141414","20px",SANS,"'Arial Black',sans-serif","none"],
+sports:["Sports / Coach","High energy","🏆","#0b0b0b","#b31217","rgba(0,0,0,.6)","#ffffff","#d0d0d0","#ff3b30","#ffcc00","#1a1a1a","#ffffff","#ff3b30","6px",SANS,"Impact,'Arial Black',sans-serif","repeating-linear-gradient(-30deg,transparent 0 30px,rgba(255,255,255,.03) 30px 60px)"]};
+const DEF={theme:"norse",name:"Leon Tucker",title:"Founder · Leonlink.net",bio:"Building networks that connect people, ideas and business.",crest:"🦁",logo:"",phone:"",email:"hello@leonlinks.net",links:[["🌐","Website","https://leonlinks.net"],["📅","Book a Call","https://calendly.com/"],["🛠","Services","#"],["💼","LinkedIn","https://linkedin.com/"],["✉️","Email Me","mailto:hello@leonlinks.net"],["📇","Save Contact","vcard"]]};
+const $=id=>document.getElementById(id);let S;
+function load(){try{if(location.hash.length>1){document.body.classList.add("view");return JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(1)))))}}catch(e){}
+try{return JSON.parse(localStorage.getItem("leonlinks"))||structuredClone(DEF)}catch(e){return structuredClone(DEF)}}
+function save(){if(!document.body.classList.contains("view"))localStorage.setItem("leonlinks",JSON.stringify(S))}
+function esc(s){return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function safeUrl(u){u=String(u||"").trim();return /^(https?:|mailto:|tel:|#|\/)/i.test(u)?u:(u?"https://"+u:"#")}
+function applyTheme(){const t=T[S.theme]||T.norse,r=document.documentElement.style;K.forEach((k,i)=>r.setProperty("--"+k,t[i+3]));
+r.setProperty("--shadow",t[3].match(/^#[ef]/)?"0 8px 30px rgba(20,40,80,.12)":"0 10px 40px rgba(0,0,0,.45)");
+document.querySelectorAll(".sw").forEach(e=>e.classList.toggle("active",e.dataset.t===S.theme))}
+const RUNES="ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ01";
+function scramble(el){if(S.theme!=="norse"&&S.theme!=="cyber"&&S.theme!=="military")return;const f=el.dataset.f;let n=0;clearInterval(el._i);
+el._i=setInterval(()=>{el.textContent=f.split("").map((c,i)=>i<n||c==" "?c:RUNES[Math.random()*RUNES.length|0]).join("");if(++n>f.length){clearInterval(el._i);el.textContent=f}},28)}
+function render(){applyTheme();$("crest").innerHTML=S.logo?`<img src="${esc(safeUrl(S.logo))}" alt="">`:esc(S.crest||"★");
+$("name").textContent=S.name;$("title").textContent=S.title;$("bio").textContent=S.bio;
+$("links").innerHTML=S.links.map((l,i)=>{const v=l[2]==="vcard";return `<a class="link" style="animation-delay:${.15+i*.08}s" ${v?'data-v="1" href="#"':`href="${esc(safeUrl(l[2]))}" target="_blank" rel="noopener"`}><span class="ic">${esc(l[0])}</span><span class="t" data-f="${esc(l[1])}">${esc(l[1])}</span><span>›</span></a>`}).join("");
+$("links").querySelectorAll(".link").forEach(a=>{a.onmouseenter=()=>scramble(a.querySelector(".t"));if(a.dataset.v)a.onclick=e=>{e.preventDefault();vcard()}});
+$("foot").textContent="© "+new Date().getFullYear()+" "+(S.name||"")+" · "+T[S.theme][0]+" theme";save()}
+function vcard(){const v=`BEGIN:VCARD\nVERSION:3.0\nFN:${S.name}\nTITLE:${S.title}\nTEL:${S.phone}\nEMAIL:${S.email}\nNOTE:${S.bio}\nEND:VCARD`;dl(v,(S.name||"contact").replace(/\W+/g,"_")+".vcf","text/vcard")}
+function dl(txt,name,type){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;a.click()}
+function toast(m){$("toast").textContent=m;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1800)}
+function buildGrid(){$("grid").innerHTML=Object.entries(T).map(([k,t])=>`<div class="sw" data-t="${k}" style="background:linear-gradient(135deg,${t[3]},${t[4]});color:${t[6]};border:1px solid ${t[12]}"><b>${t[2]} ${t[0]}</b><small>${t[1]}</small><div class="dots"><i style="background:${t[8]}"></i><i style="background:${t[9]}"></i><i style="background:${t[6]}"></i></div></div>`).join("");
+$("grid").querySelectorAll(".sw").forEach(e=>e.onclick=()=>{S.theme=e.dataset.t;render();toast(T[S.theme][0]+" theme applied")})}
+function buildForm(){[["fName","name"],["fTitle","title"],["fBio","bio"],["fCrest","crest"],["fLogo","logo"],["fPhone","phone"],["fEmail","email"]].forEach(([id,k])=>{$(id).value=S[k]||"";$(id).oninput=()=>{S[k]=$(id).value;render()}});rows()}
+function rows(){$("rows").innerHTML=S.links.map((l,i)=>`<div class="row"><input value="${esc(l[0])}" data-i="${i}" data-j="0"><input value="${esc(l[1])}" data-i="${i}" data-j="1" placeholder="Label"><input class="u" value="${esc(l[2])}" data-i="${i}" data-j="2" placeholder="https://..."><button data-m="${i}" data-d="-1">↑</button><button data-m="${i}" data-d="1">↓</button><button data-x="${i}">✕</button></div>`).join("");
+$("rows").querySelectorAll("input").forEach(e=>e.oninput=()=>{S.links[e.dataset.i][e.dataset.j]=e.value;render()});
+$("rows").querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{const i=+b.dataset.m,j=i+ +b.dataset.d;if(j<0||j>=S.links.length)return;[S.links[i],S.links[j]]=[S.links[j],S.links[i]];rows();render()});
+$("rows").querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{S.links.splice(+b.dataset.x,1);rows();render()})}
+$("addRow").onclick=()=>{S.links.push(["🔗","New link","https://"]);rows();render()};
+document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{const p=$(b.dataset.p),o=p.classList.contains("open");document.querySelectorAll(".panel").forEach(x=>x.classList.remove("open"));if(!o)p.classList.add("open")});
+document.querySelector(".wrap").onclick=()=>document.querySelectorAll(".panel").forEach(x=>x.classList.remove("open"));
+$("share").onclick=()=>{const u=location.href.split("#")[0]+"#"+btoa(unescape(encodeURIComponent(JSON.stringify(S))));(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast("Share link copied"),()=>prompt("Copy your link:",u))};
+$("export").onclick=()=>{const h="<!DOCTYPE html>"+document.documentElement.outerHTML.replace(/const DEF=\{/,"const LOCK="+JSON.stringify(S).replace(/</g,"\\u003c")+";const DEF={");dl(h,"my-linkpage.html","text/html");toast("Exported — host this file anywhere")};
+S=typeof LOCK!=="undefined"?(document.body.classList.add("view"),LOCK):load();
+buildGrid();buildForm();render();
+</script>
+<script>
+/* v2: tap ripple + private local click analytics */
+(function(){const K='ll_clicks';const get=()=>JSON.parse(localStorage.getItem(K)||'{}');
+function deco(){document.querySelectorAll('a.link').forEach(a=>{if(a.dataset.v2)return;a.dataset.v2=1;
+a.addEventListener('pointerdown',e=>{const r=a.getBoundingClientRect(),d=document.createElement('span');d.className='rip';const z=Math.max(r.width,r.height);d.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;a.appendChild(d);setTimeout(()=>d.remove(),650)});
+a.addEventListener('click',()=>{const c=get(),k=a.textContent.trim().slice(0,40);c[k]=(c[k]||0)+1;localStorage.setItem(K,JSON.stringify(c))});});}
+deco();new MutationObserver(deco).observe(document.body,{childList:true,subtree:true});})();
+</script>
+</body></html>
