@@ -34,6 +34,7 @@ textarea{resize:vertical;min-height:64px}.row{display:grid;grid-template-columns
 .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);opacity:0;background:var(--t);color:#0b0b0d;padding:10px 16px;border-radius:12px;font-weight:500;transition:.3s var(--e);z-index:30;pointer-events:none}.toast.on{opacity:1;transform:translate(-50%,0)}
 .mtab{display:none}
 @media(max-width:900px){.wrap{grid-template-columns:1fr}.pvw{display:none}body.showpv .pvw{display:grid;position:fixed;inset:58px 0 0;z-index:4}body.showpv .ed{display:none}.mtab{display:inline-flex}.hide-s{display:none}.ed{border:0;padding:16px 14px 110px}.themes{grid-template-columns:repeat(2,1fr)}.phone{width:min(360px,92vw)}}
+.prob{font:600 10px/1 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:999px;background:linear-gradient(135deg,#d4b26a,#f3e2b0);color:#1a1408;vertical-align:middle;margin-left:6px}.tog{display:flex;gap:10px;align-items:center;font-size:14px;cursor:pointer;margin:6px 0 10px}.tog input{width:18px;height:18px;accent-color:#d4b26a}.probox{display:none}.probox.on{display:block}.probox .ok{color:#7bd88f}.probox .bad{color:#ff8a8a}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style></head><body>
 <header class="top"><a class="logo" href="/"><i></i>Leonlink</a>
@@ -52,6 +53,11 @@ textarea{resize:vertical;min-height:64px}.row{display:grid;grid-template-columns
 <div class="f"><span>Button style</span></div><div class="seg"><button data-fill="">Glass</button><button data-fill="filled">Filled</button><button data-fill="outline">Outline</button></div>
 <button class="mini" id="resetc">Reset to theme defaults</button></section>
 <section><h3>Blocks</h3><p class="sub">Links, headers, videos, galleries and maps. Drag to reorder.</p><div id="blocks"></div><div class="add" id="add"></div></section>
+<section><h3>Branding <span class="prob">Premium</span></h3><p class="sub">Free pages show a small &ldquo;Built with Leonlink&rdquo; badge. Premium removes it so the page is fully yours.</p>
+<label class="tog"><input type="checkbox" id="c_badge"><span>Remove &ldquo;Built with Leonlink&rdquo; badge</span></label>
+<div id="probox" class="probox"><label class="f"><span>Premium key</span><input id="f_pro" placeholder="LL-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false"></label><p class="sub" id="promsg">Enter your key to unlock. Keys come with Leonlink Premium.</p></div></section>
+<section><h3>Backup</h3><p class="sub">Your page belongs to you. Download a backup file and restore it on any device &mdash; no account, no lock-in.</p>
+<div class="seg"><button id="bbak">Download backup</button><button id="brest">Restore backup</button></div><input type="file" id="frest" accept=".json,application/json" hidden></section>
 <section><h3>Share</h3><p class="sub">Your page lives in its link. Copy it, put it on an NFC card, or export a file to host on your own domain.</p>
 <div class="seg"><button id="nfc">Copy link for NFC</button><button id="bclear">Start over</button></div></section>
 </div><div class="pvw"><div class="phone"><iframe id="pv" title="Live preview"></iframe></div></div></div>
@@ -97,7 +103,7 @@ const dec=s=>JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g,'+').repla
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safe=u=>{u=String(u||'').trim();if(/^(https?:|mailto:|tel:)/i.test(u))return u;if(/^[^\s@/]+@[^\s@]+\.[a-z]{2,}$/i.test(u))return 'mailto:'+u;if(/^[\w.-]+\.[a-z]{2,}/i.test(u))return 'https://'+u;return '#'};
 const img=u=>/^data:image\/(png|jpe?g|webp|gif);/i.test(u||'')?u:'';
-function norm(s){s=Object.assign({theme:'norse',name:'',title:'',bio:'',avatar:'',email:'',phone:'',links:[],custom:{}},s||{});if(!THEMES[s.theme])s.theme='norse';s.custom=Object.assign({accent:'',font:'',shape:'',fill:''},s.custom||{});s.links=(s.links||[]).map(l=>Object.assign({type:'link',t:'',s:'',u:'',i:'link',f:0,thumb:'',start:'',end:'',imgs:[],addr:''},l));return s}
+function norm(s){s=Object.assign({theme:'norse',name:'',title:'',bio:'',avatar:'',email:'',phone:'',links:[],custom:{},pro:'',hideBadge:0},s||{});if(!THEMES[s.theme])s.theme='norse';s.custom=Object.assign({accent:'',font:'',shape:'',fill:''},s.custom||{});s.links=(s.links||[]).map(l=>Object.assign({type:'link',t:'',s:'',u:'',i:'link',f:0,thumb:'',start:'',end:'',imgs:[],addr:''},l));return s}
 function live(l,now){now=now||new Date();const d=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');if(l.start&&d<l.start)return false;if(l.end&&d>l.end)return false;return true}
 function embedUrl(u){u=String(u||'').trim();let m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/);if(m)return{k:'yt',src:'https://www.youtube-nocookie.com/embed/'+m[1]};m=u.match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(track|album|playlist|episode|show|artist)\/([A-Za-z0-9]+)/);if(m)return{k:'sp',src:'https://open.spotify.com/embed/'+m[1]+'/'+m[2],h:/track|episode/.test(m[1])?152:352};return null}
 const hex3=h=>{h=String(h).replace('#','');if(h.length==3)h=[...h].map(c=>c+c).join('');return [0,2,4].map(i=>parseInt(h.substr(i,2),16)||0)};
@@ -179,7 +185,7 @@ if(l.type==='gallery')b=field('Caption',l.t,'t','Optional')+`<label class="f"><s
 if(l.type==='map')b=field('Address',l.addr,'addr','e.g. 1 Main St, Boston')+field('Label',l.t,'t','Optional');
 if(l.type!=='header')b+=`<details ${l.start||l.end?'open':''}><summary>Schedule</summary><div class="row">${field('Show from',l.start,'start','','date')}${field('Hide after',l.end,'end','','date')}</div></details>`;
 return `<div class="card" draggable="true" data-i="${i}"><div class="ch"><span class="grip" title="Drag to reorder">${UX.drag}</span><span class="ti">${ty[1]}<em>${ty[0]}</em><b>${esc(l.t)}</b></span><button class="ib" data-act="up" aria-label="Move up">${UX.up}</button><button class="ib" data-act="down" aria-label="Move down">${UX.down}</button><button class="ib" data-act="del" aria-label="Delete">${UX.trash}</button></div><div class="cb">${b}</div></div>`}
-function build(){
+function build(){setTimeout(syncPro);
 $('f_name').value=ED.name;$('f_title').value=ED.title;$('f_bio').value=ED.bio;$('f_email').value=ED.email;$('f_phone').value=ED.phone;
 $('themes').innerHTML=Object.entries(THEMES).map(([k,t])=>`<button class="th${k===ED.theme?' on':''}" data-t="${k}" style="background:${t.bg};color:${t.text};${k===ED.theme?'box-shadow:0 0 0 2px '+t.accent:''}"><b style="font-family:${t.head};color:${t.accent}">${t.n}</b><small style="color:${t.muted}">${t.d||''}</small></button>`).join('');
 const c=ED.custom,hx=v=>/^#[0-9a-f]{6}$/i.test(v||'');$('c_accent').value=hx(c.accent)?c.accent:(hx(THEMES[ED.theme].accent)?THEMES[ED.theme].accent:'#888888');
@@ -218,6 +224,13 @@ async function copy(t,m){try{await navigator.clipboard.writeText(t);toast(m)}cat
 $('bshare').onclick=$('nfc').onclick=()=>copy(shareUrl(),'Link copied. Paste it anywhere or write it to an NFC tag.');
 $('bview').onclick=()=>window.open(shareUrl(),'_blank');
 $('bexp').onclick=async()=>{try{let h=await (await fetch('/p')).text();h=h.replace('<script>','<script>window.__LL='+JSON.stringify(ED).replace(/</g,'\\u003c')+';');dl((ED.name||'leonlink').replace(/\s+/g,'-').toLowerCase()+'.html',h,'text/html');toast('Exported. Host this file anywhere.')}catch(e){toast('Export failed. Check your connection.')}};
+function proOk(k){k=(k||'').toUpperCase().trim();const m=/^LL-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})$/.exec(k);if(!m)return false;let h=7;for(const c of m[1]+m[2])h=(h*31+c.charCodeAt(0))%1679616;return h.toString(36).toUpperCase().padStart(4,'0')===m[3]}
+function syncPro(){const ok=proOk(ED.pro),c=$('c_badge');c.checked=!!ED.hideBadge;$('probox').classList.toggle('on',!!ED.hideBadge&&!ok);if(document.activeElement!==$('f_pro'))$('f_pro').value=ED.pro||'';const m=$('promsg');if(ED.hideBadge&&!ok){m.className='sub'+(ED.pro?' bad':'');m.textContent=ED.pro?'That key isn\u2019t valid. Check it and try again.':'Enter your key to unlock. Keys come with Leonlink Premium.'}}
+$('c_badge').onchange=e=>{ED.hideBadge=e.target.checked?1:0;commit(1);syncPro();if(ED.hideBadge&&!proOk(ED.pro))$('f_pro').focus();else if(ED.hideBadge)toast('Badge removed.')};
+$('f_pro').oninput=e=>{ED.pro=e.target.value.trim().toUpperCase();commit();syncPro();if(proOk(ED.pro))toast('Premium unlocked. Badge removed.')};
+$('bbak').onclick=()=>{dl((ED.name||'leonlink').replace(/\s+/g,'-').toLowerCase()+'-backup.json',JSON.stringify(Object.assign({leonlink:1},ED),null,2),'application/json');toast('Backup downloaded.')};
+$('brest').onclick=()=>$('frest').click();
+$('frest').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());delete d.leonlink;ED=norm(d);commit(1);build();toast('Backup restored. You can undo this.')}catch(x){toast('That file isn\u2019t a Leonlink backup.')}e.target.value=''};
 $('bclear').onclick=()=>{if(confirm('Start over with a blank page? You can undo this.')){ED=norm({});commit(1);build()}};
 $('mtab').onclick=()=>document.body.classList.toggle('showpv');
 build();frame.src='/p?preview=1';
