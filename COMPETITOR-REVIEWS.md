@@ -16,11 +16,11 @@ Sources: Trustpilot (~3.9/5, 7,000+ reviews), G2, Capterra, Product Hunt and 202
 - Deeper analytics only on paid tiers
 - Competitors (e.g. Beacons) take a cut of sales
 
-## How Leonlink answers each one
-| Complaint | Leonlink |
+## How Linkline answers each one
+| Complaint | Linkline |
 |---|---|
 | Themes/customisation paywalled | All 15 themes, custom colour, font and button styles free |
-| Monthly billing for branding removal | One-time Premium key removes the "Built with Leonlink" badge (no subscription, no refunds to chase) |
+| Monthly billing for branding removal | One-time Premium key removes the "Built with Linkline" badge (no subscription, no refunds to chase) |
 | Account lockouts | No account needed; one-click backup/restore file, page lives in its own link |
 | List-only layout | Headers, YouTube/Spotify embeds, galleries, maps, featured links, thumbnails |
 | Paid scheduling, QR | Scheduled links and QR/NFC free |
@@ -28,5 +28,5 @@ Sources: Trustpilot (~3.9/5, 7,000+ reviews), G2, Capterra, Product Hunt and 202
 | Analytics paywalled | Private, tracker-free analytics planned free in Stage 2 |
 
 ## Premium badge removal
-Free pages show a small "Built with Leonlink" pill. Premium users enter a key in Edit → Branding to hide it.
+Free pages show a small "Built with Linkline" pill. Premium users enter a key in Edit → Branding to hide it.
 Keys are currently validated in the browser (placeholder); server-side licensing via Supabase + Stripe lands in Stages 2–3.

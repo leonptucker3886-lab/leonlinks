@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Leonlink Editor</title><meta name="theme-color" content="#0b0b0d"><meta name="robots" content="noindex">
+<title>Linkline Editor</title><meta name="theme-color" content="#0b0b0d"><meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>:root{--bg:#0b0b0d;--p:#131316;--p2:#1a1a1f;--l:rgba(255,255,255,.08);--t:#f4f4f5;--m:#9a9aa3;--a:#8ab4ff;--e:cubic-bezier(.2,.8,.2,1)}
@@ -37,7 +37,7 @@ textarea{resize:vertical;min-height:64px}.row{display:grid;grid-template-columns
 .prob{font:600 10px/1 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:999px;background:linear-gradient(135deg,#d4b26a,#f3e2b0);color:#1a1408;vertical-align:middle;margin-left:6px}.tog{display:flex;gap:10px;align-items:center;font-size:14px;cursor:pointer;margin:6px 0 10px}.tog input{width:18px;height:18px;accent-color:#d4b26a}.probox{display:none}.probox.on{display:block}.probox .ok{color:#7bd88f}.probox .bad{color:#ff8a8a}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style></head><body>
-<header class="top"><a class="logo" href="/"><i></i>Leonlink</a>
+<header class="top"><a class="logo" href="/"><i></i>Linkline</a>
 <button class="btn" id="und" title="Undo (Ctrl+Z)" aria-label="Undo"><!--undo--></button><button class="btn" id="red" title="Redo (Ctrl+Shift+Z)" aria-label="Redo"><!--redo--></button>
 <button class="btn mtab" id="mtab"><!--eye-->Preview</button><button class="btn hide-s" id="bview"><!--eye-->View</button><button class="btn" id="bqr" aria-label="QR code"><!--qr--><span class="hide-s">QR</span></button><button class="btn hide-s" id="bexp"><!--dl-->Export</button><button class="btn pri" id="bshare"><!--share-->Share</button></header>
 <div class="wrap"><div class="ed">
@@ -53,9 +53,9 @@ textarea{resize:vertical;min-height:64px}.row{display:grid;grid-template-columns
 <div class="f"><span>Button style</span></div><div class="seg"><button data-fill="">Glass</button><button data-fill="filled">Filled</button><button data-fill="outline">Outline</button></div>
 <button class="mini" id="resetc">Reset to theme defaults</button></section>
 <section><h3>Blocks</h3><p class="sub">Links, headers, videos, galleries and maps. Drag to reorder.</p><div id="blocks"></div><div class="add" id="add"></div></section>
-<section><h3>Branding <span class="prob">Premium</span></h3><p class="sub">Free pages show a small &ldquo;Built with Leonlink&rdquo; badge. Premium removes it so the page is fully yours.</p>
-<label class="tog"><input type="checkbox" id="c_badge"><span>Remove &ldquo;Built with Leonlink&rdquo; badge</span></label>
-<div id="probox" class="probox"><label class="f"><span>Premium key</span><input id="f_pro" placeholder="LL-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false"></label><p class="sub" id="promsg">Enter your key to unlock. Keys come with Leonlink Premium.</p></div></section>
+<section><h3>Branding <span class="prob">Premium</span></h3><p class="sub">Free pages show a small &ldquo;Built with Linkline&rdquo; badge. Premium removes it so the page is fully yours.</p>
+<label class="tog"><input type="checkbox" id="c_badge"><span>Remove &ldquo;Built with Linkline&rdquo; badge</span></label>
+<div id="probox" class="probox"><label class="f"><span>Premium key</span><input id="f_pro" placeholder="LL-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false"></label><p class="sub" id="promsg">Enter your key to unlock. Keys come with Linkline Premium.</p></div></section>
 <section><h3>Backup</h3><p class="sub">Your page belongs to you. Download a backup file and restore it on any device &mdash; no account, no lock-in.</p>
 <div class="seg"><button id="bbak">Download backup</button><button id="brest">Restore backup</button></div><input type="file" id="frest" accept=".json,application/json" hidden></section>
 <section><h3>Share</h3><p class="sub">Your page lives in its link. Copy it, put it on an NFC card, or export a file to host on your own domain.</p>
@@ -225,12 +225,12 @@ $('bshare').onclick=$('nfc').onclick=()=>copy(shareUrl(),'Link copied. Paste it 
 $('bview').onclick=()=>window.open(shareUrl(),'_blank');
 $('bexp').onclick=async()=>{try{let h=await (await fetch('/p')).text();h=h.replace('<script>','<script>window.__LL='+JSON.stringify(ED).replace(/</g,'\\u003c')+';');dl((ED.name||'leonlink').replace(/\s+/g,'-').toLowerCase()+'.html',h,'text/html');toast('Exported. Host this file anywhere.')}catch(e){toast('Export failed. Check your connection.')}};
 function proOk(k){k=(k||'').toUpperCase().trim();const m=/^LL-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})$/.exec(k);if(!m)return false;let h=7;for(const c of m[1]+m[2])h=(h*31+c.charCodeAt(0))%1679616;return h.toString(36).toUpperCase().padStart(4,'0')===m[3]}
-function syncPro(){const ok=proOk(ED.pro),c=$('c_badge');c.checked=!!ED.hideBadge;$('probox').classList.toggle('on',!!ED.hideBadge&&!ok);if(document.activeElement!==$('f_pro'))$('f_pro').value=ED.pro||'';const m=$('promsg');if(ED.hideBadge&&!ok){m.className='sub'+(ED.pro?' bad':'');m.textContent=ED.pro?'That key isn\u2019t valid. Check it and try again.':'Enter your key to unlock. Keys come with Leonlink Premium.'}}
+function syncPro(){const ok=proOk(ED.pro),c=$('c_badge');c.checked=!!ED.hideBadge;$('probox').classList.toggle('on',!!ED.hideBadge&&!ok);if(document.activeElement!==$('f_pro'))$('f_pro').value=ED.pro||'';const m=$('promsg');if(ED.hideBadge&&!ok){m.className='sub'+(ED.pro?' bad':'');m.textContent=ED.pro?'That key isn\u2019t valid. Check it and try again.':'Enter your key to unlock. Keys come with Linkline Premium.'}}
 $('c_badge').onchange=e=>{ED.hideBadge=e.target.checked?1:0;commit(1);syncPro();if(ED.hideBadge&&!proOk(ED.pro))$('f_pro').focus();else if(ED.hideBadge)toast('Badge removed.')};
 $('f_pro').oninput=e=>{ED.pro=e.target.value.trim().toUpperCase();commit();syncPro();if(proOk(ED.pro))toast('Premium unlocked. Badge removed.')};
 $('bbak').onclick=()=>{dl((ED.name||'leonlink').replace(/\s+/g,'-').toLowerCase()+'-backup.json',JSON.stringify(Object.assign({leonlink:1},ED),null,2),'application/json');toast('Backup downloaded.')};
 $('brest').onclick=()=>$('frest').click();
-$('frest').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());delete d.leonlink;ED=norm(d);commit(1);build();toast('Backup restored. You can undo this.')}catch(x){toast('That file isn\u2019t a Leonlink backup.')}e.target.value=''};
+$('frest').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());delete d.leonlink;ED=norm(d);commit(1);build();toast('Backup restored. You can undo this.')}catch(x){toast('That file isn\u2019t a Linkline backup.')}e.target.value=''};
 $('bclear').onclick=()=>{if(confirm('Start over with a blank page? You can undo this.')){ED=norm({});commit(1);build()}};
 $('mtab').onclick=()=>document.body.classList.toggle('showpv');
 build();frame.src='/p?preview=1';

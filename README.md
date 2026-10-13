@@ -1,6 +1,6 @@
-# Leonlink
+# Linkline
 
-Free, open-source link-in-bio page maker for business. Live at https://leonlink.vercel.app (Leonlink.net).
+Free, open-source link-in-bio page maker for business. Live at https://linkline.leonlink.net (Leonlink.net).
 
 ## Features (Stage 1)
 - 15 designer themes, each with its own typeface, palette, background pattern and motion
@@ -19,7 +19,7 @@ Free, open-source link-in-bio page maker for business. Live at https://leonlink.
 - `p/index.html` public page viewer
 
 ## Roadmap
-- Stage 2: Supabase sign-in, user accounts, short URLs (leonlink.net/name), server-rendered pages, private analytics, Linktree import
+- Stage 2: Supabase sign-in, user accounts, short URLs (linkline.leonlink.net/name), server-rendered pages, private analytics, Linktree import
 - Stage 3: custom domains, Stripe tips and sales with no cut, contact form / email signup / booking blocks, performance and SEO pass
 
 MIT licensed.
