@@ -102,22 +102,16 @@ legal:L({n:'Legal',d:'Ivory, oxblood, serif',bg:'#f7f4ee',glow:'rgba(120,30,40,.
 estate:L({n:'Real Estate',d:'Warm stone & brass',bg:'#f4efe8',glow:'rgba(170,130,70,.14)',accent:'#8a6a35',text:'#211c16',muted:'#776c5f',head:"'Fraunces',serif",hw:400,track:'-.02em',r:'10px'}),
 creative:D({n:'Creative Studio',d:'Ink black, electric lime',bg:'#0b0b0b',glow:'rgba(210,255,60,.13)',accent:'#d6ff3d',head:"'Instrument Serif',serif",hw:400,track:'-.02em',r:'24px',pat:'dots'}),
 coach:D({n:'Sports / Coach',d:'Charged orange, athletic',bg:'#0d0a08',glow:'rgba(255,110,40,.18)',accent:'#ff7a3d',muted:'#a39588',head:"'Barlow Condensed',sans-serif",hw:700,track:'.02em',case:'uppercase',pat:'diag',r:'8px'})};
-const DEF={theme:'norse',name:'Leon Tucker',title:'Founder · Leonlink',bio:'Building connected brands and digital experiences. Let\u2019s work together.',avatar:'',initials:'LT',email:'hello@leonlink.net',phone:'',links:[
-{t:'Book a strategy call',s:'30 minutes · free',u:'https://leonlink.net/book',i:'cal',f:1},
-{t:'Website',s:'leonlink.net',u:'https://leonlink.net',i:'globe'},
-{t:'Services',s:'What we do',u:'https://leonlink.net/services',i:'brief'},
-{t:'Portfolio',s:'Selected work',u:'https://leonlink.net/work',i:'grid'},
-{t:'LinkedIn',s:'Connect professionally',u:'https://linkedin.com',i:'in'},
-{t:'Email',s:'hello@leonlink.net',u:'mailto:hello@leonlink.net',i:'mail'}]};
+const DEF={theme:'norse',name:'',title:'',bio:'',avatar:'',initials:'',email:'',phone:'',links:[]};
 const $=id=>document.getElementById(id);
 const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const dec=s=>JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g,'+').replace(/_/g,'/')))));
 let st,VIEW=false;
 try{if(window.__LL){st=window.__LL;VIEW=true}else if(location.hash.length>2){st=dec(location.hash.slice(1));VIEW=true}}catch(e){}
-if(!st){try{st=JSON.parse(localStorage.getItem('leonlink'))}catch(e){}}
+if(!st){try{st=JSON.parse(localStorage.getItem('leonlink_v2'))}catch(e){}}
 if(!st||!st.links)st=JSON.parse(JSON.stringify(DEF));
 if(VIEW)document.body.classList.add('view');
-const save=()=>{if(!VIEW)localStorage.setItem('leonlink',JSON.stringify(st))};
+const save=()=>{if(!VIEW)localStorage.setItem('leonlink_v2',JSON.stringify(st))};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safe=u=>{u=String(u||'').trim();if(/^(https?:|mailto:|tel:)/i.test(u))return u;if(/^[\w.-]+\.[a-z]{2,}/i.test(u))return 'https://'+u;return '#'};
 function applyTheme(){const t=THEMES[st.theme]||THEMES.norse,r=document.documentElement.style;
@@ -127,8 +121,8 @@ const RUNE='ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜ�
 function scramble(el){const t=THEMES[st.theme];if(!t.fx||el._b)return;const set=t.fx==='runes'?RUNE:BIN,orig=el.dataset.t;el._b=1;let f=0;
 const iv=setInterval(()=>{el.textContent=[...orig].map((c,i)=>i<f/2||c===' '?c:set[Math.random()*set.length|0]).join('');if(++f>orig.length*2){clearInterval(iv);el.textContent=orig;el._b=0}},22)}
 function render(){applyTheme();document.title=(st.name||'Leonlink')+' — Links';
-$('avatar').innerHTML=st.avatar?`<img src="${esc(/^data:image\//.test(st.avatar)?st.avatar:safe(st.avatar))}" alt="">`:esc(st.initials||(st.name||'L').split(' ').map(w=>w[0]).join('').slice(0,2));
-$('name').textContent=st.name;$('title').textContent=st.title;$('bio').textContent=st.bio;
+$('avatar').innerHTML=st.avatar?`<img src="${esc(/^data:image\//.test(st.avatar)?st.avatar:safe(st.avatar))}" alt="">`:esc(st.initials||(st.name||'L').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase());
+const empty=!VIEW&&!st.name&&!st.links.some(l=>l.t);$('name').textContent=st.name||(empty?'Your name':'');$('name').style.opacity=st.name?'':'.45';$('title').textContent=st.title||(empty?'Tap Edit to add your details and links':'');$('bio').textContent=st.bio;
 const clicks=JSON.parse(localStorage.getItem('ll_clicks')||'{}');
 $('links').innerHTML=st.links.filter(l=>l.t).map((l,i)=>`<a class="link${l.f?' feat':''}" href="${esc(safe(l.u))}" target="_blank" rel="noopener" style="animation-delay:${.15+i*.06}s" data-i="${i}"><span class="ic">${IC[l.i]||IC.link}</span><span class="lt"><span class="tx" data-t="${esc(l.t)}">${esc(l.t)}</span>${l.s?`<small>${esc(l.s)}</small>`:''}</span>${!VIEW&&clicks[l.u]?`<small style="color:var(--muted);font-size:11px">${clicks[l.u]}</small>`:''}<span class="arr">${UI.arr}</span></a>`).join('');
 $('links').querySelectorAll('.link').forEach(a=>{a.addEventListener('mouseenter',()=>scramble(a.querySelector('.tx')));a.addEventListener('click',()=>{const c=JSON.parse(localStorage.getItem('ll_clicks')||'{}'),u=st.links[a.dataset.i].u;c[u]=(c[u]||0)+1;localStorage.setItem('ll_clicks',JSON.stringify(c))})});
@@ -142,11 +136,11 @@ $('scrim').onclick=close;document.querySelectorAll('[data-close]').forEach(b=>b.
 function buildGrid(){$('grid').innerHTML=Object.entries(THEMES).map(([k,t])=>`<button class="th${k===st.theme?' on':''}" data-k="${k}"><div class="pv" style="background:radial-gradient(80% 90% at 50% 0%,${t.glow},transparent),${t.bg};color:${t.text}"><b style="font-family:${t.head};text-transform:${t.case};letter-spacing:${t.track};font-weight:${t.hw}">Aa</b><i style="background:${t.btn};border:1px solid ${t.line};border-radius:${Math.min(parseInt(t.r),5)}px"></i><i style="width:60%;background:${t.accent};opacity:.85"></i></div><span>${t.n}<em>${t.d}</em></span></button>`).join('');
 $('grid').querySelectorAll('.th').forEach(b=>b.onclick=()=>{st.theme=b.dataset.k;save();render();buildGrid()})}
 const iconOpts=k=>Object.keys(IC).map(i=>`<option ${i===k?'selected':''}>${i}</option>`).join('');
-function buildForm(){const f=$('form');f.innerHTML=`<label>Name</label><input data-f="name" value="${esc(st.name)}"><label>Title</label><input data-f="title" value="${esc(st.title)}"><label>Bio</label><textarea data-f="bio">${esc(st.bio)}</textarea><label>Initials (shown if no photo)</label><input data-f="initials" value="${esc(st.initials)}" maxlength="3"><label>Photo / logo URL — or upload</label><input data-f="avatar" value="${esc(/^data:/.test(st.avatar)?'(uploaded image)':st.avatar)}"><input type="file" id="up" accept="image/*" style="margin-top:6px"><label>Email (for Save contact)</label><input data-f="email" value="${esc(st.email)}"><label>Phone</label><input data-f="phone" value="${esc(st.phone)}">
+function buildForm(){const f=$('form');f.innerHTML=`<label>Name</label><input data-f="name" placeholder="e.g. Jane Smith" value="${esc(st.name)}"><label>Title</label><input data-f="title" placeholder="e.g. Founder · Company" value="${esc(st.title)}"><label>Bio</label><textarea data-f="bio" placeholder="A short line about you or your business">${esc(st.bio)}</textarea><label>Initials (shown if no photo)</label><input data-f="initials" value="${esc(st.initials)}" maxlength="3"><label>Photo / logo URL — or upload</label><input data-f="avatar" value="${esc(/^data:/.test(st.avatar)?'(uploaded image)':st.avatar)}"><input type="file" id="up" accept="image/*" style="margin-top:6px"><label>Email (for Save contact)</label><input data-f="email" value="${esc(st.email)}"><label>Phone</label><input data-f="phone" value="${esc(st.phone)}">
 <label style="margin-top:26px;font-size:13px;color:#e4e4e7">Links</label><div id="rows"></div><button class="primary" id="add">+ Add link</button>`;
 f.querySelectorAll('[data-f]').forEach(el=>el.oninput=()=>{if(el.dataset.f==='avatar'&&el.value==='(uploaded image)')return;st[el.dataset.f]=el.value;save();render()});
 $('up').onchange=e=>{const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=240;const s=Math.min(img.width,img.height),x=c.getContext('2d');x.drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,240,240);st.avatar=c.toDataURL('image/jpeg',.82);save();render();buildForm()};img.src=r.result};r.readAsDataURL(file)};
-$('add').onclick=()=>{st.links.push({t:'New link',s:'',u:'https://',i:'link'});save();render();rows()};rows()}
+$('add').onclick=()=>{st.links.push({t:'',s:'',u:'',i:'link'});save();render();rows()};rows()}
 function rows(){$('rows').innerHTML=st.links.map((l,i)=>`<div class="row" data-i="${i}"><input class="full" data-k="t" value="${esc(l.t)}" placeholder="Title"><input data-k="s" value="${esc(l.s)}" placeholder="Subtitle"><select data-k="i">${iconOpts(l.i)}</select><input class="full" data-k="u" value="${esc(l.u)}" placeholder="https://"><div class="ctl"><label><input type="checkbox" data-k="f" ${l.f?'checked':''}>Featured</label><button class="mini" data-m="-1">↑</button><button class="mini" data-m="1">↓</button><button class="mini" data-d>Remove</button></div></div>`).join('');
 $('rows').querySelectorAll('.row').forEach(r=>{const i=+r.dataset.i;r.querySelectorAll('[data-k]').forEach(el=>el.oninput=el.onchange=()=>{st.links[i][el.dataset.k]=el.type==='checkbox'?(el.checked?1:0):el.value;save();render()});
 r.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const j=i+ +b.dataset.m;if(j<0||j>=st.links.length)return;[st.links[i],st.links[j]]=[st.links[j],st.links[i]];save();render();rows()});
@@ -155,5 +149,5 @@ $('dock').innerHTML=`<button id="bT">${UI.pal}<span>Themes</span></button><butto
 $('bT').onclick=()=>{buildGrid();open('themes')};$('bE').onclick=()=>{buildForm();open('edit')};
 $('bS').onclick=async()=>{const u=location.origin+location.pathname+'#'+enc(st);try{await navigator.clipboard.writeText(u);toast('Share link copied')}catch(e){prompt('Copy your link',u)}};
 $('bX').onclick=()=>{const h='<!DOCTYPE html>'+document.documentElement.outerHTML.replace('<script>','<script>window.__LL='+JSON.stringify(st).replace(/</g,'\\u003c')+';');dl('index.html',h,'text/html');toast('Page exported — upload index.html to any host')};
-render();
+render();if(!VIEW&&!st.name&&!st.links.length){buildForm();open('edit')}
 </script></body></html>
