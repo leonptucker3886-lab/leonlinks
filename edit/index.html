@@ -36,7 +36,9 @@ textarea{resize:vertical;min-height:64px}.row{display:grid;grid-template-columns
 @media(max-width:900px){.top{overflow-x:auto;scrollbar-width:none}.top::-webkit-scrollbar{display:none}.top>*{flex:none}.wrap{grid-template-columns:1fr}.pvw{display:none}body.showpv .pvw{display:grid;position:fixed;inset:58px 0 0;z-index:4}body.showpv .ed{display:none}.pvback{display:none}body.showpv .pvback{display:inline-flex;position:fixed;top:70px;left:12px;z-index:9;align-items:center;gap:6px;padding:10px 16px;border-radius:99px;border:1px solid var(--l,#333);background:#17171b;color:#fff;font:600 14px Inter,sans-serif;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.45)}.mtab{display:inline-flex}.hide-s{display:none}.ed{border:0;padding:16px 14px 110px}.themes{grid-template-columns:repeat(2,1fr)}.phone{width:min(360px,92vw)}}
 .prob{font:600 10px/1 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:999px;background:linear-gradient(135deg,#d4b26a,#f3e2b0);color:#1a1408;vertical-align:middle;margin-left:6px}.tog{display:flex;gap:10px;align-items:center;font-size:14px;cursor:pointer;margin:6px 0 10px}.tog input{width:18px;height:18px;accent-color:#d4b26a}.probox{display:none}.probox.on{display:block}.probox .ok{color:#7bd88f}.probox .bad{color:#ff8a8a}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
-.llid-chip{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px 0 6px;border-radius:999px;border:1px solid var(--l);background:var(--p);color:var(--t);font-size:13px;font-weight:600;white-space:nowrap;flex:0 0 auto}.llid-chip i{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#22f0ff,#7c5cff);color:#04121a;font-style:normal;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center}</style></head><body>
+.llid-chip{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px 0 6px;border-radius:999px;border:1px solid var(--l);background:var(--p);color:var(--t);font-size:13px;font-weight:600;white-space:nowrap;flex:0 0 auto}.llid-chip i{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#22f0ff,#7c5cff);color:#04121a;font-style:normal;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center}.vflash{animation:vfl 1.4s var(--e)}@keyframes vfl{0%,40%{box-shadow:0 0 0 3px var(--a)}100%{box-shadow:0 0 0 0 transparent}}
+.vhint{position:absolute;top:-34px;left:0;right:0;text-align:center;font-size:12px;color:var(--m)}
+</style></head><body>
 <header class="top"><a class="logo" href="/"><i></i>Linkline</a>
 <button class="btn" id="und" title="Undo (Ctrl+Z)" aria-label="Undo"><!--undo--></button><button class="btn" id="red" title="Redo (Ctrl+Shift+Z)" aria-label="Redo"><!--redo--></button>
 <button class="btn mtab" id="mtab"><!--eye-->Preview</button><button class="btn hide-s" id="bview"><!--eye-->View</button><button class="btn" id="bqr" aria-label="QR code"><!--qr--><span class="hide-s">QR</span></button><button class="btn hide-s" id="bexp"><!--dl-->Export</button><button class="btn pri" id="bshare"><!--share-->Share</button></header>
@@ -61,7 +63,7 @@ textarea{resize:vertical;min-height:64px}.row{display:grid;grid-template-columns
 <div class="seg"><button id="bbak">Download backup</button><button id="brest">Restore backup</button></div><input type="file" id="frest" accept=".json,application/json" hidden></section>
 <section><h3>Share</h3><p class="sub">Your page lives in its link. Copy it, put it on an NFC card, or export a file to host on your own domain.</p>
 <div class="seg"><button id="nfc">Copy link for NFC</button><button id="bclear">Start over</button></div></section>
-</div><div class="pvw"><div class="phone"><iframe id="pv" title="Live preview"></iframe></div></div></div>
+</div><div class="pvw"><div class="phone"><div class="vhint">Click anything on the phone to edit it</div><iframe id="pv" title="Live preview"></iframe></div></div></div>
 <div class="qr" id="qrbox"><div><h3>Your QR code</h3><canvas id="qrc"></canvas><p id="qrmsg"></p><div class="seg"><button id="qrdl">Download PNG</button><button id="qrx">Close</button></div></div></div>
 <div class="toast" id="toast" role="status"></div>
 <script src="/ll-id.js"></script>
@@ -260,6 +262,24 @@ $('brest').onclick=()=>$('frest').click();
 $('frest').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());delete d.leonlink;ED=norm(d);commit(1);build();toast('Backup restored. You can undo this.')}catch(x){toast('That file isn\u2019t a Linkline backup.')}e.target.value=''};
 $('bclear').onclick=()=>{if(confirm('Start over with a blank page? You can undo this.')){ED=norm({});commit(1);build()}};
 document.body.classList.remove('showpv');var pvSet=function(){var on=document.body.classList.contains('showpv');var b=$('mtab');if(b){b.innerHTML=(on?'<!--edit-->Edit':'<!--eye-->Preview');b.setAttribute('aria-pressed',on?'true':'false')}};var pvTog=function(){document.body.classList.toggle('showpv');pvSet()};$('mtab').onclick=pvTog;var pb=$('pvback');if(pb)pb.onclick=pvTog;pvSet();
+
+/* ---- visual editor bridge ---- */
+function vflash(el){if(!el)return;if(document.body.classList.contains('showpv'))$('mtab').click();el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.remove('vflash');void el.offsetWidth;el.classList.add('vflash')}
+window.addEventListener('message',e=>{const d=e.data||{};if(e.source!==frame.contentWindow)return;
+if(d.llEdit){const k=d.llEdit,v=String(d.v||'').slice(0,k==='bio'?600:200);
+ if(d.i!=null){const l=ED.links[d.i];if(!l||!['t','s'].includes(k))return;l[k]=v;const c=document.querySelector('.card[data-i="'+d.i+'"]');if(c){const inp=c.querySelector('[data-on="'+k+'"]');if(inp)inp.value=v;if(k==='t'){const b=c.querySelector('.ti b');if(b)b.textContent=v}}}
+ else if(['name','title','bio'].includes(k)){ED[k]=v;$('f_'+k).value=v}else return;
+ localStorage.setItem('leonlink_v3',JSON.stringify(ED));clearTimeout(htm);htm=setTimeout(push,500);if(qrOn)drawQR();return}
+if(d.llFocus){const f=d.llFocus;
+ if(f==='avatar'){vflash($('f_avatar').closest('section'));$('f_avatar').click();return}
+ if(f==='email'){vflash($('f_email'));$('f_email').focus({preventScroll:true});return}
+ if(f==='theme'){vflash($('themes').closest('section'));return}
+ if(f==='block'){const c=document.querySelector('.card[data-i="'+d.i+'"]');vflash(c);const inp=c&&c.querySelector('input,select');if(inp)inp.focus({preventScroll:true})}return}
+if(d.llAdd){const b=document.querySelector('[data-add="'+d.llAdd+'"]');if(b)b.click();return}
+if(d.llAct){const i=d.i,L=ED.links;if(!L[i])return;
+ if(d.llAct==='more'){const c=document.querySelector('.card[data-i="'+i+'"]');vflash(c);return}
+ if(d.llAct==='del'){L.splice(i,1);toast('Block deleted. Use Undo to bring it back.')}
+ if(d.llAct==='up'&&i>0)[L[i-1],L[i]]=[L[i],L[i-1]];if(d.llAct==='down'&&i<L.length-1)[L[i+1],L[i]]=[L[i],L[i+1]];commit(1);build()}});
 build();frame.src='/p?preview=1';
 
 ;document.querySelectorAll('button').forEach(b=>{b.innerHTML=b.innerHTML.replace(/<!--(\w+)-->/g,(m,k)=>({undo:UX.undo,redo:UX.redo,eye:UX.eye,qr:UX.qr,dl:UI.dl,share:UI.share})[k]||'')});</script></body></html>
