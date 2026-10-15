@@ -54,10 +54,20 @@ body.fill-outline .link{background:transparent;border-color:var(--accent);backdr
 body.pv main{padding-top:48px}
 body.settled .link,body.settled .sec,body.settled .blk,body.settled .profile{animation:none;opacity:1}
 
-</style></head><body>
+</style><style>body.ved [data-ve]{outline:1.5px dashed transparent;outline-offset:4px;border-radius:6px;transition:outline-color .15s;cursor:text}
+body.ved [data-ve]:hover{outline-color:var(--accent)}body.ved [data-ve]:focus{outline:2px solid var(--accent)}
+body.ved [data-ve]:empty::before{content:attr(data-ph);opacity:.45}
+body.ved #avatar{cursor:pointer;position:relative}body.ved #avatar:hover{box-shadow:0 0 0 3px var(--accent)}
+body.ved #links>[data-i]{position:relative}body.ved #links>[data-i]:hover{box-shadow:0 0 0 2px var(--accent)}
+.vtb{position:absolute;top:-13px;right:8px;display:none;gap:2px;background:#111;border-radius:999px;padding:3px;z-index:5;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+body.ved #links>[data-i]:hover .vtb,body.ved #links>[data-i]:focus-within .vtb{display:flex}
+.vtb button{all:unset;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;font:600 12px/1 system-ui;cursor:pointer}.vtb button:hover{background:#333}.vtb button.d:hover{background:#c0392b}
+.vadd{display:none;width:100%;margin-top:10px;padding:13px;border-radius:var(--r);border:1.5px dashed var(--line);background:none;color:var(--muted);font:500 14px system-ui;cursor:pointer}.vadd:hover{border-color:var(--accent);color:var(--text)}body.ved .vadd{display:block}
+@media(hover:none){body.ved #links>[data-i] .vtb{display:flex}}</style>
+</head><body>
 <div class="bgfx"></div><div class="pattern" id="pattern"></div>
 <main><header class="profile"><div class="avatar" id="avatar"></div><h1 id="name"></h1><p class="title" id="title"></p><p class="bio" id="bio"></p></header>
-<nav class="links" id="links"></nav><div class="actions"><button class="save" id="vc"></button></div>
+<nav class="links" id="links"></nav><button class="vadd" id="vadd" type="button">+ Add link</button><div class="actions"><button class="save" id="vc"></button></div>
 <a class="built" id="built" href="https://linkline.leonlink.net/?ref=badge" target="_blank" rel="noopener"><i></i>Built with <b>Linkline</b></a></main>
 <script>
 const S=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
@@ -126,10 +136,10 @@ function applyTheme(){T=resolve(st);const r=document.documentElement.style;
 $('pattern').innerHTML=P[T.pat]||'';const m=document.querySelector('meta[name=theme-color]');if(m)m.content=T.bg;
 document.body.className=(PREVIEW?'pv ':'')+(PREVIEW&&SETTLE?'settled ':'')+(T.fill?'fill-'+T.fill:'');loadFonts([fam(T.head),fam(T.body)])}
 function block(l,i,d){const sch=!live(l),st2=`style="animation-delay:${d}s"`;if(sch&&!PREVIEW)return'';const sc=sch?' sched':'',bd=sch?'<span class="badge">Scheduled</span>':'';
-if(l.type==='header')return l.t?`<h2 class="sec${sc}" ${st2}>${esc(l.t)}${bd}</h2>`:'';
-if(l.type==='embed'){const e=embedUrl(l.u);if(!e)return'';return `<div class="blk ${e.k}${sc}" ${st2}><iframe src="${esc(e.src)}" ${e.h?`height="${e.h}"`:''} loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="${esc(l.t||'Embedded media')}"></iframe>${l.t?`<div class="cap">${esc(l.t)}${bd}</div>`:''}</div>`}
-if(l.type==='gallery'){const im=(l.imgs||[]).map(img).filter(Boolean);if(!im.length)return'';return `<div class="blk${sc}" ${st2}>${l.t?`<div class="cap">${esc(l.t)}${bd}</div>`:''}<div class="gal${im.length==1?' one':''}">${im.map((s,k)=>`<img src="${s}" alt="${esc(l.t||'Gallery')} ${k+1}" loading="lazy">`).join('')}</div></div>`}
-if(l.type==='map'){if(!l.addr)return'';return `<div class="blk map${sc}" ${st2}><iframe src="https://maps.google.com/maps?q=${encodeURIComponent(l.addr)}&output=embed" loading="lazy" title="Map"></iframe><div class="cap">${esc(l.t||l.addr)}${bd}</div></div>`}
+if(l.type==='header')return l.t?`<h2 class="sec${sc}" ${st2} data-i="${i}">${esc(l.t)}${bd}</h2>`:'';
+if(l.type==='embed'){const e=embedUrl(l.u);if(!e)return'';return `<div class="blk ${e.k}${sc}" ${st2} data-i="${i}"><iframe src="${esc(e.src)}" ${e.h?`height="${e.h}"`:''} loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="${esc(l.t||'Embedded media')}"></iframe>${l.t?`<div class="cap">${esc(l.t)}${bd}</div>`:''}</div>`}
+if(l.type==='gallery'){const im=(l.imgs||[]).map(img).filter(Boolean);if(!im.length)return'';return `<div class="blk${sc}" ${st2} data-i="${i}">${l.t?`<div class="cap">${esc(l.t)}${bd}</div>`:''}<div class="gal${im.length==1?' one':''}">${im.map((s,k)=>`<img src="${s}" alt="${esc(l.t||'Gallery')} ${k+1}" loading="lazy">`).join('')}</div></div>`}
+if(l.type==='map'){if(!l.addr)return'';return `<div class="blk map${sc}" ${st2} data-i="${i}"><iframe src="https://maps.google.com/maps?q=${encodeURIComponent(l.addr)}&output=embed" loading="lazy" title="Map"></iframe><div class="cap">${esc(l.t||l.addr)}${bd}</div></div>`}
 if(!l.t)return'';const th=img(l.thumb);
 return `<a class="link${l.f?' feat':''}${sc}" href="${esc(safe(l.u))}" target="_blank" rel="noopener" ${st2} data-i="${i}"><span class="ic${th?' th':''}">${th?`<img src="${th}" alt="">`:(IC[l.i]||IC.link)}</span><span class="lt"><span class="tx" data-t="${esc(l.t)}">${esc(l.t)}</span>${bd}${l.s?`<small>${esc(l.s)}</small>`:''}</span><span class="arr">${UI.arr}</span></a>`}
 function proOk(k){k=(k||'').toUpperCase().trim();const m=/^LL-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})$/.exec(k);if(!m)return false;let h=7;for(const c of m[1]+m[2])h=(h*31+c.charCodeAt(0))%1679616;return h.toString(36).toUpperCase().padStart(4,'0')===m[3]}
@@ -139,14 +149,38 @@ const empty=!st.name&&!st.links.length;$('name').textContent=st.name||(PREVIEW?'
 $('title').textContent=st.title||(PREVIEW&&empty?'Add your details in the editor':'');$('bio').textContent=st.bio;
 let d=.15;$('links').innerHTML=st.links.map((l,i)=>{const h=block(l,i,d);if(h)d+=.06;return h}).join('')||(PREVIEW?'<div class="empty">Your links and blocks appear here.</div>':'');
 $('links').querySelectorAll('.link').forEach(a=>{a.addEventListener('mouseenter',()=>scramble(a.querySelector('.tx')));a.addEventListener('pointerdown',e=>{const r=a.getBoundingClientRect(),s=document.createElement('span'),z=Math.max(r.width,r.height);s.className='ripple';s.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;a.appendChild(s);setTimeout(()=>s.remove(),650)})});
-$('vc').innerHTML=UI.user+'Save contact';$('vc').style.display=(st.email||st.phone)?'':'none'}
+$('vc').innerHTML=UI.user+'Save contact';$('vc').style.display=(st.email||st.phone)?'':'none';vedDecorate()}
 $('vc').onclick=()=>dl((st.name||'contact').replace(/\s+/g,'_')+'.vcf',vcard(st),'text/vcard');
+
+/* ---- visual editor (preview mode only) ---- */
+let VED=0,EDITING=0,PEND=null;
+function vpost(m){try{window.parent.postMessage(m,'*')}catch(e){}}
+function ve(el,k,i,ph){if(!el)return;el.setAttribute('data-ve','');el.contentEditable='plaintext-only';if(el.contentEditable!=='plaintext-only')el.contentEditable='true';el.dataset.k=k;if(i!=null)el.dataset.vi=i;el.dataset.ph=ph||''}
+function vedDecorate(){if(!VED)return;document.body.classList.add('ved');
+if(!st.name)$('name').textContent='';ve($('name'),'name',null,'Your name');
+if(!st.title)$('title').textContent='';ve($('title'),'title',null,'Add a title');ve($('bio'),'bio',null,'Add a short bio');
+$('links').querySelectorAll('[data-i]').forEach(b=>{const i=+b.dataset.i,l=st.links[i];if(!l)return;
+ const t=b.matches('h2')?b:b.querySelector('.tx,.cap');if(t){const bg=t.querySelector('.badge');if(bg)bg.remove();t.textContent=l.t;ve(t,'t',i,'Title')}
+ const sm=b.querySelector('small');if(sm)ve(sm,'s',i,'Subtitle');
+ const tb=document.createElement('span');tb.className='vtb';tb.innerHTML='<button data-va="up" title="Move up">&#8593;</button><button data-va="down" title="Move down">&#8595;</button><button data-va="more" title="All settings">&#9881;</button><button class="d" data-va="del" title="Delete">&#10005;</button>';b.appendChild(tb)})}
+function vedInit(){VED=1;vedDecorate();
+document.addEventListener('click',e=>{const a=e.target.closest('a');if(a&&!e.target.closest('#built'))e.preventDefault();
+ const va=e.target.closest('[data-va]');if(va){e.preventDefault();e.stopPropagation();vpost({llAct:va.dataset.va,i:+va.closest('[data-i]').dataset.i});return}
+ if(e.target.closest('#avatar')){vpost({llFocus:'avatar'});return}
+ if(e.target.closest('#vadd')){vpost({llAdd:'link'});return}
+ if(e.target.closest('[data-ve]'))return;
+ const b=e.target.closest('#links>[data-i]');if(b)vpost({llFocus:'block',i:+b.dataset.i});else if(e.target.closest('.actions'))vpost({llFocus:'email'});else if(!e.target.closest('main'))vpost({llFocus:'theme'})},true);
+document.addEventListener('focusin',e=>{if(e.target.matches&&e.target.matches('[data-ve]'))EDITING=1});
+document.addEventListener('focusout',e=>{if(e.target.matches&&e.target.matches('[data-ve]')){EDITING=0;setTimeout(()=>{if(!EDITING&&PEND){st=PEND;PEND=null;render()}},0)}});
+document.addEventListener('keydown',e=>{const el=e.target;if(!el.matches||!el.matches('[data-ve]'))return;if(e.key==='Enter'&&!(el.dataset.k==='bio'&&e.shiftKey)){e.preventDefault();el.blur()}if(e.key==='Escape')el.blur()});
+document.addEventListener('paste',e=>{const el=e.target.closest&&e.target.closest('[data-ve]');if(!el)return;e.preventDefault();document.execCommand('insertText',false,(e.clipboardData||window.clipboardData).getData('text').replace(/\s*\n\s*/g,el.dataset.k==='bio'?'\n':' '))});
+document.addEventListener('input',e=>{const el=e.target.closest&&e.target.closest('[data-ve]');if(!el)return;const v=el.innerText.replace(/\n$/,'');const m={llEdit:el.dataset.k,v};if(el.dataset.vi!=null){m.i=+el.dataset.vi;if(st.links[m.i])st.links[m.i][m.llEdit]=v}else st[m.llEdit]=v;vpost(m)})}
 function boot(){PREVIEW=/[?&]preview/.test(location.search)&&window.parent!==window;
 if(window.__LL)st=norm(window.__LL);else if(location.hash.length>1){try{st=norm(dec(location.hash.slice(1)))}catch(e){}}
 const has=window.__LL||location.hash.length>1;
 if(!has&&!PREVIEW){applyTheme();$('name').textContent='No page here yet';$('bio').innerHTML='This link has no page data. <a href="../edit" style="color:var(--accent)">Create your free Linkline page</a>.';$('vc').style.display='none';return}
 render();
-if(PREVIEW){window.addEventListener('message',e=>{if(e.origin!==location.origin&&location.protocol!=='file:')return;if(e.data&&e.data.ll){st=norm(e.data.ll);SETTLE=1;render()}});window.parent.postMessage({llReady:1},'*')}
+if(PREVIEW){window.addEventListener('message',e=>{if(e.origin!==location.origin&&location.protocol!=='file:')return;if(e.data&&e.data.ll){const n=norm(e.data.ll);SETTLE=1;if(EDITING){PEND=n;return}st=n;render()}});vedInit();window.parent.postMessage({llReady:1},'*')}
 window.addEventListener('hashchange',()=>{if(window.__LL)return;try{st=norm(dec(location.hash.slice(1)));render()}catch(e){}})}
 boot();
 
