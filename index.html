@@ -26,7 +26,14 @@ table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:14px 12px
 .end{text-align:center;margin:120px auto 0;padding:70px 24px;border-top:1px solid var(--l)}footer{text-align:center;color:var(--m);font-size:13px;padding:30px}footer a{color:var(--m)}
 @media(max-width:800px){.grid{grid-template-columns:1fr}.strip{justify-content:flex-start;overflow-x:auto;padding-bottom:20px}nav a:not(.cta):not(.logo){display:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.tss{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;padding:10px 16px;font:500 13px Inter,system-ui,sans-serif;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.25)}
+.tss b{opacity:.7;font-weight:600;margin-right:4px}
+.tss a{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);color:inherit;text-decoration:none}
+.tss i{width:8px;height:8px;border-radius:50%;background:#888;display:inline-block}
+.tss i.up{background:#22c55e}.tss i.down{background:#ef4444}
 </style></head><body><div class="glow"></div>
+<div class="tss" id="tss" aria-live="polite"><b>Tool status</b></div>
 <nav><a class="logo" href="/"><i></i>Linkline</a><a href="#features">Features</a><a href="#compare">Compare</a><a href="https://github.com/leonptucker3886-lab/leonlinks">GitHub</a><a class="cta" href="/edit">Create your page</a></nav>
 <header class="hero"><div class="pill">Free and open source · linkline.leonlink.net</div><h1>One link for your<br><em>whole business.</em></h1>
 <p class="lead">Build a premium link page in minutes. Fifteen designer themes, QR codes and NFC-ready links, with no fees, no ads and no tracking.</p>
@@ -59,5 +66,10 @@ table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:14px 12px
 <script>
 const M=[['Norse','#07090d','#e6ecf5','#b9d4ff',"'Cinzel',serif"],['Executive','#0c0a07','#f3ead8','#d4b26a',"Georgia,serif"],['Manager','#f6f6f4','#18181b','#2f5bd3','Inter,sans-serif'],['Cyberpunk','#08060f','#eae6ff','#ff3df2','monospace'],['Nature','#0b120d','#e7efe5','#9fd49a',"Georgia,serif"],['Legal','#f7f5f0','#1c1a17','#7a2e2e',"Georgia,serif"]];
 document.getElementById('strip').innerHTML=M.map((t,i)=>`<div class="mini" style="background:${t[1]};color:${t[2]};animation-delay:${.1+i*.08}s"><div class="av" style="background:linear-gradient(135deg,${t[3]},transparent)"></div><b style="font-family:${t[4]}">${t[0]}</b><small style="color:${t[3]}">Founder</small><span></span><span></span><span></span><span style="border-color:${t[3]}"></span></div>`).join('');
+</script><script>
+(function(){var tools=[["Home","/"],["Editor","/edit"],["ClearCopy","https://clearcopy.vercel.app/"],["GitHub","https://github.com/leonptucker3886-lab/leonlinks"]];
+var box=document.getElementById('tss');tools.forEach(function(t){var a=document.createElement('a');a.href=t[1];var d=document.createElement('i');a.appendChild(d);a.appendChild(document.createTextNode(t[0]));a.title='Checking…';box.appendChild(a);
+var same=t[1].charAt(0)==='/';var c=new AbortController();setTimeout(function(){c.abort()},5000);
+fetch(t[1],{method:same?'HEAD':'GET',mode:same?'same-origin':'no-cors',cache:'no-store',signal:c.signal}).then(function(r){var ok=!same||r.ok;d.className=ok?'up':'down';a.title=ok?'Online':'Down ('+r.status+')'}).catch(function(){d.className='down';a.title='Unreachable'});});})();
 </script></body></html>
 
