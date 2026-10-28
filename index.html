@@ -27,7 +27,7 @@ table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:14px 12px
 @media(max-width:800px){.grid{grid-template-columns:1fr}.strip{justify-content:flex-start;overflow-x:auto;padding-bottom:20px}nav a:not(.cta):not(.logo){display:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body><div class="glow"></div>
-<nav><a class="logo" href="/"><i></i>Linkline</a><a href="#features">Features</a><a href="#compare">Compare</a><a href="https://github.com/leonptucker3886-lab/leonlinks">GitHub</a><a class="cta" href="/edit">Create your page</a></nav>
+<nav><a class="logo" href="/"><i></i>Linkline</a><a href="#features">Features</a><a href="#compare">Compare</a><a href="#find-my-tool">Find My Tool</a><a href="https://github.com/leonptucker3886-lab/leonlinks">GitHub</a><a class="cta" href="/edit">Create your page</a></nav>
 <header class="hero"><div class="pill">Free and open source · linkline.leonlink.net</div><h1>One link for your<br><em>whole business.</em></h1>
 <p class="lead">Build a premium link page in minutes. Fifteen designer themes, QR codes and NFC-ready links, with no fees, no ads and no tracking.</p>
 <div class="btns"><a class="cta" href="/edit">Create your page, free</a><a class="cta ghost" href="#features">See what's included</a></div>
@@ -55,6 +55,21 @@ table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:14px 12px
 <tr><td>Third-party trackers</td><td class="y">None</td><td>Common</td></tr>
 <tr><td>Open source</td><td class="y">Yes</td><td class="n">No</td></tr></table></section>
 <section class="end"><h2 style="font-size:clamp(30px,5vw,46px);letter-spacing:-.03em;margin:0 0 20px">Your page is one click away.</h2><a class="cta" href="/edit">Create your page</a></section>
+<section id="find-my-tool" style="max-width:820px;margin:48px auto;padding:0 20px">
+<h2>Find My Tool</h2><p>Tell us what you need to do. We'll point you to the right Leonlink tool.</p>
+<input id="fmt-q" type="search" placeholder="e.g. share my links, fix my writing, business card" aria-label="What do you need?" style="width:100%;padding:12px;border-radius:10px;border:1px solid #444;font-size:16px;box-sizing:border-box">
+<div id="fmt-chips" style="margin:10px 0;display:flex;gap:8px;flex-wrap:wrap"></div>
+<div id="fmt-out" aria-live="polite"></div></section>
+<script>(function(){var T=[
+{n:"Linkline",d:"One link page for your whole business.",u:"/edit",k:"link links page bio profile share social business card qr"},
+{n:"ClearCopy",d:"Clean up grammar and wording in your copy.",u:"https://clearcopy.leonlink.net",k:"grammar writing spelling copy text fix edit proofread"},
+{n:"Source on GitHub",d:"Read or contribute to the open-source code.",u:"https://github.com/leonptucker3886-lab/leonlinks",k:"code github source open developer contribute"}];
+var q=document.getElementById("fmt-q"),o=document.getElementById("fmt-out"),c=document.getElementById("fmt-chips");
+function card(t){return '<a href="'+t.u+'" style="display:block;padding:14px;margin:8px 0;border:1px solid #444;border-radius:10px;text-decoration:none;color:inherit"><b>'+t.n+'</b><br>'+t.d+'</a>'}
+function run(){var w=q.value.toLowerCase().split(/\s+/).filter(Boolean);var r=w.length?T.filter(function(t){return w.some(function(x){return (t.n+" "+t.k).toLowerCase().indexOf(x)>-1})}):T;
+o.innerHTML=r.length?r.map(card).join(""):"<p>No match yet. Try \"links\" or \"grammar\".</p>"}
+["share links","fix grammar","see the code"].forEach(function(x){var b=document.createElement("button");b.type="button";b.textContent=x;b.style.cssText="padding:6px 12px;border-radius:999px;border:1px solid #555;background:none;color:inherit;cursor:pointer";b.onclick=function(){q.value=x;run()};c.appendChild(b)});
+q.addEventListener("input",run);run()})();</script>
 <footer>Linkline · Leonlink.net · <a href="https://github.com/leonptucker3886-lab/leonlinks">Open source on GitHub</a></footer>
 <script>
 const M=[['Norse','#07090d','#e6ecf5','#b9d4ff',"'Cinzel',serif"],['Executive','#0c0a07','#f3ead8','#d4b26a',"Georgia,serif"],['Manager','#f6f6f4','#18181b','#2f5bd3','Inter,sans-serif'],['Cyberpunk','#08060f','#eae6ff','#ff3df2','monospace'],['Nature','#0b120d','#e7efe5','#9fd49a',"Georgia,serif"],['Legal','#f7f5f0','#1c1a17','#7a2e2e',"Georgia,serif"]];
